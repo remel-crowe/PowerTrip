@@ -1,0 +1,89 @@
+POST http://localhost:3000/auth/register 
+Content-Type: application/json
+
+{
+    "name": "Ilove Cars",
+    "email": "ilovecars@gmail.com",
+    "password": "Password1!"
+}
+
+
+###
+
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+    "email": "ilovecars@gmail.com",
+    "password": "Password1!"
+}
+
+
+
+
+###
+
+GET http://localhost:3000/garage
+Content-Type: application/json
+X-Access-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ODNkZDg0ZWVjYTgyYzA1NDcxNDI1YiIsImlhdCI6MTcxOTkxNzk2OCwiZXhwIjoxNzIwMDA0MzY4fQ.mWz7oCfcriOPkbzDrQdldhAu_NdERmMQuyex6hvVxlA
+
+{
+
+}
+
+
+
+###
+
+POST http://localhost:3000/garage
+Content-Type: application/json
+X-Access-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ODNkZDg0ZWVjYTgyYzA1NDcxNDI1YiIsImlhdCI6MTcxOTkxNzk2OCwiZXhwIjoxNzIwMDA0MzY4fQ.mWz7oCfcriOPkbzDrQdldhAu_NdERmMQuyex6hvVxlA
+
+{
+    "make" : "Tesla",
+    "model" : "Model S",
+    "maxMiles" : 300,
+    "charge" : 50,
+    "fastCharge" : true
+
+}
+
+### 
+POST http://localhost:3000/garage
+Content-Type: application/json
+X-Access-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ODNkZDg0ZWVjYTgyYzA1NDcxNDI1YiIsImlhdCI6MTcxOTkxNzk2OCwiZXhwIjoxNzIwMDA0MzY4fQ.mWz7oCfcriOPkbzDrQdldhAu_NdERmMQuyex6hvVxlA
+
+{
+    "make" : "BMW",
+    "model" : "iX1",
+    "maxMiles" : 440,
+    "charge" : 94,
+    "fastCharge" : true
+
+}
+
+###
+
+PUT http://localhost:3000/garage/0
+Content-Type: application/json
+X-Access-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ODNkZDg0ZWVjYTgyYzA1NDcxNDI1YiIsImlhdCI6MTcxOTkxNzk2OCwiZXhwIjoxNzIwMDA0MzY4fQ.mWz7oCfcriOPkbzDrQdldhAu_NdERmMQuyex6hvVxlA
+
+{
+    "charge": 66
+
+}
+
+
+### 
+DELETE http://localhost:3000/garage/0
+Content-Type: application/json
+X-Access-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ODNkZDg0ZWVjYTgyYzA1NDcxNDI1YiIsImlhdCI6MTcxOTkxNzk2OCwiZXhwIjoxNzIwMDA0MzY4fQ.mWz7oCfcriOPkbzDrQdldhAu_NdERmMQuyex6hvVxlA
+
+{
+    
+}
+
+
+
+
+
