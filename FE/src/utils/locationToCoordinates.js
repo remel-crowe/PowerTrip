@@ -1,7 +1,7 @@
 import axios from "axios";
 
 async function getLocationCoordinates(location) {
-  const apiKey = "AIzaSyAV7Fed-5If50sKVzGdmr9U1aVM_l9k6Pw"; // Replace with your actual API key
+  const apiKey = import.meta.env.VITE_APP_GEOCODING_KEY;
   const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
     location
   )}&key=${apiKey}`;
