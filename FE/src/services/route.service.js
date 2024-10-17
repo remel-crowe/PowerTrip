@@ -16,7 +16,6 @@ export const fetchChargingStations = async (coords, accessToken, dist) => {
     const response = await axios.get(
       `https://api.openchargemap.io/v3/poi/?output=json&latitude=${coords.latitude}&longitude=${coords.longitude}&distance=${dist}&distanceunit=KM&key=${accessToken}`
     );
-
     return response.data;
   } catch (error) {
     return (error.response = "Error fetching charging stations");

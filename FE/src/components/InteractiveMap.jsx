@@ -1,8 +1,7 @@
 import * as turf from "@turf/turf";
-import { render } from "react-dom";
 
 import { useEffect, useState, useRef } from "react";
-import { MdOutlineElectricCar } from "react-icons/md";
+import { FcChargeBattery } from "react-icons/fc";
 import { FaSearchengin } from "react-icons/fa";
 
 import fetchLocation from "../services/location.service";
@@ -24,7 +23,7 @@ const OpenChargeToken = import.meta.env.VITE_APP_OCM_KEY;
 const InteractiveMap = ({ selectedCar }) => {
   const { maxMiles, charge } = selectedCar || {};
 
-  const start = "";
+  const [start, setStart] = useState(null);
   const [end, setEnd] = useState("");
   const [markers, setMarkers] = useState([]);
 
@@ -43,51 +42,36 @@ const InteractiveMap = ({ selectedCar }) => {
     chargeStationMarkers.current = [];
   };
 
-  const handleInsufficientCharge = (startCoords, miles, bearing) => {
-    fetchChargingStations(startCoords, OpenChargeToken, miles * 1.609).then(
-      (chargingStations) => {
-        setChargingStations(chargingStations);
+  const fetchAndDisplayStations = async () => {
+    removeChargeStationMarkers();
+    if (map.current && chargingStations.length > 0) {
+      const startCoords = await getLocationCoordinates(start);
+      for (const station of chargingStations) {
+        const { Latitude, Longitude } = station.AddressInfo;
+        const stationBearing = turf.bearing(
+          turf.point([startCoords.longitude, startCoords.latitude]),
+          turf.point([Longitude, Latitude])
+        );
+
+        if (Math.abs(stationBearing - bearing) <= 45) {
+          const el = document.createElement("div");
+          el.className = "marker";
+          const root = createRoot(el);
+          root.render(<FcChargeBattery className="w-[20px] h-[20px]" />);
+
+          const marker = new mapboxgl.Marker(el)
+            .setLngLat([Longitude, Latitude])
+            .addTo(map.current);
+
+          chargeStationMarkers.current.push(marker);
+        }
       }
-    );
-    setBearing(bearing);
+    }
   };
 
   useEffect(() => {
-    const fetchAndDisplayStations = async () => {
-      removeChargeStationMarkers();
-      if (map.current && chargingStations.length > 0) {
-        for (const station of chargingStations) {
-          const { Latitude, Longitude } = station.AddressInfo;
-
-          const startCoords = await getLocationCoordinates(start);
-
-          const stationBearing = turf.bearing(
-            turf.point([startCoords.longitude, startCoords.latitude]),
-            turf.point([Longitude, Latitude])
-          );
-
-          if (Math.abs(stationBearing - bearing) <= 45) {
-            const el = document.createElement("div");
-            el.className = "marker";
-            const root = createRoot(el);
-            render(
-              <MdOutlineElectricCar className="text-pink-500 w-[20px] h-[20px]" />,
-              el
-            );
-
-            const marker = new mapboxgl.Marker(el)
-              .setLngLat([Longitude, Latitude])
-              .addTo(map.current);
-
-            chargeStationMarkers.current.push(marker);
-          }
-        }
-      }
-    };
-
-    // Call the async function
     fetchAndDisplayStations();
-  }, [chargingStations]); // Ensure to include all dependencies here
+  }, [chargingStations, bearing, start]);
 
   useEffect(() => {
     const initializeMap = async () => {
@@ -98,6 +82,8 @@ const InteractiveMap = ({ selectedCar }) => {
       const centerLat = latitude;
       const zoomLevel = 10;
 
+      setStart({ latitude: centerLat, longitude: centerLng });
+
       map.current = new mapboxgl.Map({
         container: mapContainerRef.current,
         style: "mapbox://styles/mapbox/streets-v11",
@@ -105,7 +91,7 @@ const InteractiveMap = ({ selectedCar }) => {
         zoom: zoomLevel,
       });
 
-      map.current.addControl(new mapboxgl.NavigationControl(), "bottom-left");
+      map.current.addControl(new mapboxgl.NavigationControl(), "top-right");
 
       map.current.on("load", () => {
         map.current.resize();
@@ -161,10 +147,17 @@ const InteractiveMap = ({ selectedCar }) => {
         setTripDuration(duration);
         setTripDistance(distance);
 
-        const carAvailableMiles = maxMiles * (charge / 100);
+        const carAvailableMiles = Math.floor(maxMiles * (charge / 100));
 
         if ((tripDistance / 1609.34).toFixed(0) > carAvailableMiles) {
-          handleInsufficientCharge(startCoords, carAvailableMiles, bearing);
+          const chargingStations = await fetchChargingStations(
+            startCoords,
+            OpenChargeToken,
+            carAvailableMiles * 1.609
+          );
+          setChargingStations(chargingStations);
+          setBearing(bearing);
+          fetchAndDisplayStations(chargingStations, bearing, startCoords);
         }
 
         if (geometry) {
@@ -223,34 +216,30 @@ const InteractiveMap = ({ selectedCar }) => {
 
   return (
     <div className="flex gap-12">
-      <div className="flex flex-col  w-full md:px-10">
-        <div className="flex justify-between items-center gap-1 flex-col md:flex-row">
-          <div className="flex gap-2 absolute z-10 top-20">
-            <div className="flex ">
-              <input
-                type="text"
-                id="end"
-                value={end}
-                onChange={(e) => setEnd(e.target.value)}
-                placeholder="Type in a destination"
-                className="border-2 border-r-0 border-blue-600 h-10 shadow-lg w-60 px-2 bg-white rounded-l-lg shadow-2xl"
-              />
-              <button onClick={fetchAndDisplayRoute} disabled={!end}>
-                <FaSearchengin className="text-black w-8 h-10 bg-white border-2 border-l-0 border-blue-600 rounded-r-lg shadow-lg p-1" />
+      <div className="flex flex-col w-full md:px-10 items-center">
+        <div className="flex absolute z-10 top-10">
+          <div className="relative w-60">
+            <input
+              type="text"
+              id="end"
+              value={end}
+              onChange={(e) => setEnd(e.target.value)}
+              placeholder="Type in a destination"
+              className="border-2 h-10 shadow-lg w-full px-10 rounded-full bg-white shadow-2xl"
+            />
+            {end && (
+              <button
+                onClick={fetchAndDisplayRoute}
+                disabled={!end}
+                className="absolute right-3 top-2 bg-blue-500 text-white rounded-full p-1 shadow-lg"
+              >
+                <FaSearchengin className="w-4 h-4" />
               </button>
-            </div>
+            )}
           </div>
-
-          {/* <button
-            onClick={fetchAndDisplayRoute}
-            className="py-2 px-12 bg-green-500 text-black rounded w-full md:w-auto md:ml-2 shadow-md cursor-pointer w"
-            disabled={!start || !end || !selectedCar}
-          >
-            Find Charging Stations
-          </button> */}
         </div>
         <div
-          className="w-full  md:w-[1000px] mx-auto h-[840px] sm:h-[600px] md:h-[950px] lg:max-h-[1050px] lg:max-w-[1100px] rounded shadow-md"
+          className="w-full md:w-[1000px] mx-auto h-[100vh] sm:h-[600px] md:h-[950px] lg:max-h-[1050px] lg:max-w-[1100px] rounded shadow-md z-0"
           ref={mapContainerRef}
         >
           {tripDistance && tripDuration && (

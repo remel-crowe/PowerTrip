@@ -17,6 +17,7 @@ import {
 function App() {
   const [user, setUser] = useState(null);
   const [cars, setCars] = useState([]);
+  const [selectedCar, setSelectedCar] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -56,11 +57,18 @@ function App() {
     setCars(data);
   };
 
+  const selectVehicle = (car) => {
+    setSelectedCar(car);
+  };
+
   return (
-    <div className="w-full overflow-hidden font-outfit">
+    <div className="w-full overflow-hidden font-outfit relative">
       {/* <Header user={user} logout={handleLogOut} /> */}
       <Routes>
-        <Route path="/" element={<Home user={user} cars={cars} />} />
+        <Route
+          path="/"
+          element={<Home user={user} cars={cars} currentCar={selectedCar} />}
+        />
         <Route path="/auth" element={<Auth setUser={setUser} />} />
         <Route
           path="/profile"
@@ -74,6 +82,8 @@ function App() {
               onAdd={addVehicle}
               onRemove={removeVehicle}
               onEdit={updateVehicle}
+              onSelect={selectVehicle}
+              selectedCar={selectedCar}
             />
           }
         />

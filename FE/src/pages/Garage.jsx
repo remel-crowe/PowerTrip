@@ -3,12 +3,12 @@ import AddCarModal from "../components/AddCarModal";
 
 import { useState } from "react";
 
-const Garage = ({ cars, onAdd, onRemove, onEdit }) => {
+const Garage = ({ cars, onAdd, onRemove, onEdit, onSelect, selectedCar }) => {
   const [showModal, setShowModal] = useState(false);
   const [editMode, setEditMode] = useState(false);
 
   return (
-    <div className="relative">
+    <div className="relative h-[100dvh]">
       <div
         className={`${
           showModal ? "filter blur-sm" : ""
@@ -56,6 +56,7 @@ const Garage = ({ cars, onAdd, onRemove, onEdit }) => {
                   index={index}
                   onRemove={() => onRemove(index)}
                   handleSave={(charge) => onEdit(index, charge)}
+                  onSelect={() => onSelect(car)}
                 />
               ))}
             </div>

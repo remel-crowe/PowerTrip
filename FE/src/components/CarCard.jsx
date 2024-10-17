@@ -12,7 +12,7 @@ import { GiPathDistance } from "react-icons/gi";
 
 import { updateCharge } from "../services/user.service";
 
-const CarCard = ({ carData, index, onRemove }) => {
+const CarCard = ({ carData, index, onRemove, onSelect, isSelected }) => {
   const { make, model, maxMiles, charge: initialCharge, fastCharge } = carData;
   const [editMode, setEditMode] = useState(false);
   const [charge, setCharge] = useState(initialCharge);
@@ -45,7 +45,14 @@ const CarCard = ({ carData, index, onRemove }) => {
   };
 
   return (
-    <div className="w-full shadow-md flex rounded-lg md:flex-col mb-4">
+    <div
+      className={`w-full shadow-md flex rounded-lg md:flex-col mb-4 ${
+        isSelected ? "border-4 border-green-500 animate-glow" : ""
+      }`}
+      onClick={() => {
+        onSelect();
+      }}
+    >
       <figure className="w-[200px] ">
         <img
           src={`/car-models/${make}_${model}.jpeg`}

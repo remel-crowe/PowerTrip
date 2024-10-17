@@ -3,19 +3,21 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      boxShadow: {
+        "custom-top":
+          "0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)",
+        "custom-top-lg":
+          "0 -10px 15px -3px rgba(0, 0, 0, 0.3), 0 -4px 6px -2px rgba(0, 0, 0, 0.05)",
+      },
       keyframes: {
-        slideInFromRight: {
-          "0%": { transform: "translateX(100%)", opacity: "0" },
-          "100%": { transform: "translateX(0)", opacity: "1" },
-        },
-        slideOutToRightt: {
-          "0%": { transform: "translateX(0)", opacity: "1" },
-          "100%": { transform: "translateX(-100%)", opacity: "0" },
+        glow: {
+          "0%": { boxShadow: "0 0 5px #008000" },
+          "50%": { boxShadow: "0 0 20px #008000" },
+          "100%": { boxShadow: "0 0 5px #008000" },
         },
       },
       animation: {
-        "slide-in-right": "slideInFromRight 0.5s ease-out forwards",
-        "slide-out-right": "slideOutToRight 0.5s ease-out forwards",
+        glow: "glow 1.5s infinite alternate",
       },
       fontFamily: {
         outfit: ["Outfit", "sans-serif"],

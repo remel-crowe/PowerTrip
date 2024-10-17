@@ -13,7 +13,7 @@ const Auth = ({ setUser }) => {
 
   return (
     <div
-      className="flex h-[100vh] items-center justify-center flex-col gap-0"
+      className="flex h-90 items-center justify-center flex-col gap-0"
       style={{
         backgroundImage: `url(${background})`,
         backgroundSize: "cover",

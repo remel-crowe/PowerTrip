@@ -20,7 +20,7 @@ const Footer = ({ user }) => {
   };
 
   return (
-    <div className="flex gap-20 justify-center p-4 h-[9.9dvh] items-center absolute bottom-0 w-full shadow-md z-50">
+    <div className="flex gap-20 justify-center p-4 h-[10.5dvh] items-center absolute bottom-0 w-full rounded-tl-3xl rounded-tr-3xl bg-white shadow-custom-top-lg">
       {[
         {
           icon: <FaHome className="text-3xl text-black" />,
