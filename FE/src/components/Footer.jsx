@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaCar, FaHome } from "react-icons/fa";
+import { FaCar, FaRoute } from "react-icons/fa";
 import { RiListSettingsLine } from "react-icons/ri";
 import { FiUser } from "react-icons/fi";
 
@@ -23,7 +23,7 @@ const Footer = ({ user }) => {
     <div className="flex gap-20 justify-center p-4 h-[10.5dvh] items-center absolute bottom-0 w-full rounded-tl-3xl rounded-tr-3xl bg-white shadow-custom-top-lg">
       {[
         {
-          icon: <FaHome className="text-3xl text-black" />,
+          icon: <FaRoute className="text-3xl text-black" />,
           path: "/",
           label: "Home",
         },

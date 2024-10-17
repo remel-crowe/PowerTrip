@@ -15,7 +15,7 @@ const Garage = ({ cars, onAdd, onRemove, onEdit, onSelect, selectedCar }) => {
         } transition-all duration-300`}
       >
         {!cars ? (
-          <div className="flex flex-col items-center mt-10">
+          <div className="flex flex-col items-center pt-10">
             <h1 className="font-bold mb-10">
               Your Garage Is Empty! Try Adding a car!
             </h1>
@@ -57,6 +57,7 @@ const Garage = ({ cars, onAdd, onRemove, onEdit, onSelect, selectedCar }) => {
                   onRemove={() => onRemove(index)}
                   handleSave={(charge) => onEdit(index, charge)}
                   onSelect={() => onSelect(car)}
+                  isSelected={selectedCar?._id === car._id}
                 />
               ))}
             </div>
